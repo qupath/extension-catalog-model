@@ -8,6 +8,7 @@ class Release(BaseModel):
     name: str
     main_url: HttpUrl
     dependency_urls: Optional[List[HttpUrl]] = None
+    javadoc_urls: Optional[List[HttpUrl]] = None
     qupath_compatible: QuPathVersionRange
 
 class Extension(BaseModel):
