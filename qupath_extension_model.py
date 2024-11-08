@@ -1,22 +1,22 @@
 from pydantic import BaseModel, List, Optional, HttpUrl
 
-class GitHubRepo(BaseModel):
-    org: str
-    repo: str
-
-class QuPathVersions(BaseModel):
+class QuPathVersionRange(BaseModel):
     min: str = "v0.6.0"
     max: Optional[str] = None
 
-class GitHubRelease(BaseModel):
+class Release(BaseModel):
     name: str
     main_url: HttpUrl
     dependency_urls: Optional[List[HttpUrl]] = None
-    qupath_compatible: QuPathVersions
+    qupath_compatible: QuPathVersionRange
 
 class Extension(BaseModel):
     name: str
     description: str
-    github: GitHubRepo
-    versions: List[GitHubRelease]
+    homepage: HttpUrl
+    versions: List[Release]
 
+class Index(BaseModel):
+    name: str
+    description: str
+    extensions: List[Extension]
