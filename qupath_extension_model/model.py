@@ -1,7 +1,7 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, HttpUrl, field_validator
 
 from typing import List, Optional
-
+import re
 
 class QuPathVersionRange(BaseModel):
     """
@@ -14,6 +14,14 @@ class QuPathVersionRange(BaseModel):
     min: str = "v0.6.0"
     max: Optional[str] = None
     excludes: Optional[str] = None
+
+    @field_validator("min", "max")
+    def _validate_version(self, version):
+        assert re.match("^v\d+\.\d+\.\d+(-rc\d+)?$", version)
+
+    @field_validator("excludes")
+    def _validate_excludes(self, excludes):
+        [self._validate_version(v) for v in excludes]
 
 class Release(BaseModel):
     """
@@ -31,6 +39,19 @@ class Release(BaseModel):
     javadoc_urls: Optional[List[HttpUrl]] = None
     qupath_versions: QuPathVersionRange
 
+    @field_validator("main_url")
+    def _check_main_url(self, main_url: HttpUrl):
+        assert main_url.host == "github.com"
+
+    @field_validator("dependency_urls", "javadoc_urls")
+    def _check_urls(self, urls):
+        [self._check_maven_or_github_url(url) for url in urls]
+
+    def _check_maven_or_github_url(self, url):
+        assert url.host in ["github.com", "maven.scijava.org", "repo1.maven.org"]
+
+
+
 class Extension(BaseModel):
     """
     A description of an extension.
@@ -44,6 +65,10 @@ class Extension(BaseModel):
     description: str
     homepage: HttpUrl
     versions: List[Release]
+    
+    @field_validator("homepage")
+    def _validate_homepage(self, url):
+        _validate_primary_url(url)
 
 class Index(BaseModel):
     """
@@ -56,3 +81,6 @@ class Index(BaseModel):
     name: str
     description: str
     extensions: List[Extension]
+
+def _validate_primary_url(primary_url: HttpUrl):
+    assert primary_url.host == "github.com"
