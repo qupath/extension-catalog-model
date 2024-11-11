@@ -16,12 +16,12 @@ class QuPathVersionRange(BaseModel):
     excludes: Optional[str] = None
 
     @field_validator("min", "max")
-    def _validate_version(self, version):
-        assert re.match("^v\d+\.\d+\.\d+(-rc\d+)?$", version)
+    def _validate_version(cls, version):
+        assert re.match("^v\d+\.\d+\.\d+(-rc\d+)?$", version), "Versions should be specified in the form v[MAJOR].[MINOR].[PATCH] and may include pre-releases, eg v0.6.0-rc1"
 
     @field_validator("excludes")
-    def _validate_excludes(self, excludes):
-        [self._validate_version(v) for v in excludes]
+    def _validate_excludes(cls, excludes):
+        [cls._validate_version(v) for v in excludes]
 
 class Release(BaseModel):
     """
@@ -40,16 +40,15 @@ class Release(BaseModel):
     qupath_versions: QuPathVersionRange
 
     @field_validator("main_url")
-    def _check_main_url(self, main_url: HttpUrl):
-        assert main_url.host == "github.com"
+    def _check_main_url(cls, main_url: HttpUrl):
+        _validate_primary_url(main_url)
 
     @field_validator("dependency_urls", "javadoc_urls")
-    def _check_urls(self, urls):
-        [self._check_maven_or_github_url(url) for url in urls]
+    def _check_urls(cls, urls):
+        [cls._check_maven_or_github_url(url) for url in urls]
 
-    def _check_maven_or_github_url(self, url):
-        assert url.host in ["github.com", "maven.scijava.org", "repo1.maven.org"]
-
+    def _check_maven_or_github_url(cls, url):
+        assert url.host in ["github.com", "maven.scijava.org", "repo1.maven.org"], "Dependency and javadoc download links must currently be hosted on github.com, SciJava Maven, or Maven Central"
 
 
 class Extension(BaseModel):
@@ -67,7 +66,7 @@ class Extension(BaseModel):
     versions: List[Release]
     
     @field_validator("homepage")
-    def _validate_homepage(self, url):
+    def _validate_homepage(cls, url):
         _validate_primary_url(url)
 
 class Index(BaseModel):
@@ -83,4 +82,4 @@ class Index(BaseModel):
     extensions: List[Extension]
 
 def _validate_primary_url(primary_url: HttpUrl):
-    assert primary_url.host == "github.com"
+    assert primary_url.host == "github.com", "Homepage and main download links must currently be hosted on github.com"
