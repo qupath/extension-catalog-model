@@ -5,7 +5,7 @@ import re
 
 class QuPathVersionRange(BaseModel):
     """
-    A specification of the minimum and maximum QuPath versions that an extension supports. Versions should be specified in the form "v[MAJOR].[MINOR].[PATCH]" corresponding to QuPath semantic versions. Release candidates should not be included.
+    A specification of the minimum and maximum QuPath versions that an extension supports. Versions should be specified in the form "v[MAJOR].[MINOR].[PATCH]" corresponding to QuPath semantic versions.
 
     :param min: The minimum/lowest QuPath version that this extension is known to be compatible with.
     :param max: The maximum/highest QuPath version that this extension is known to be compatible with.
