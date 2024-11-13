@@ -13,7 +13,7 @@ class QuPathVersionRange(BaseModel):
     """
     min: str = "v0.6.0"
     max: Optional[str] = None
-    excludes: Optional[str] = None
+    excludes: Optional[List[str]] = None
 
     @field_validator("min", "max")
     def _validate_version(cls, version):
@@ -29,13 +29,15 @@ class Release(BaseModel):
 
     :param name: The name of the release.
     :param main_url: The GitHub URL where the main extension jar can be downloaded.
-    :param dependency_urls: SciJava Maven, Maven Central, or GitHub URLs where dependency jars can be downloaded.
+    :param required_dependency_urls: SciJava Maven, Maven Central, or GitHub URLs where required dependency jars can be downloaded.
+    :param optional_dependency_urls: SciJava Maven, Maven Central, or GitHub URLs where optional dependency jars can be downloaded.
     :param javadoc_urls: SciJava Maven, Maven Central, or GitHub URLs where javadoc jars for the main extension jar and for dependencies can be downloaded.
     :param qupath_versions: A specification of minimum and maximum compatible QuPath versions.
     """
     name: str
     main_url: HttpUrl
-    dependency_urls: Optional[List[HttpUrl]] = None
+    required_dependency_urls: Optional[List[HttpUrl]] = None
+    optional_dependency_urls: Optional[List[HttpUrl]] = None
     javadoc_urls: Optional[List[HttpUrl]] = None
     qupath_versions: QuPathVersionRange
 
@@ -43,7 +45,7 @@ class Release(BaseModel):
     def _check_main_url(cls, main_url: HttpUrl):
         _validate_primary_url(main_url)
 
-    @field_validator("dependency_urls", "javadoc_urls")
+    @field_validator("main_dependency_urls", "optional_dependency_urls", "javadoc_urls")
     def _check_urls(cls, urls):
         [cls._check_maven_or_github_url(url) for url in urls]
 
