@@ -28,10 +28,10 @@ class Release(BaseModel):
     A description of an extension release hosted on GitHub.
 
     :param name: The name of the release.
-    :param main_url: The GitHub URL where the main extension jar can be downloaded.
-    :param required_dependency_urls: SciJava Maven, Maven Central, or GitHub URLs where required dependency jars can be downloaded.
-    :param optional_dependency_urls: SciJava Maven, Maven Central, or GitHub URLs where optional dependency jars can be downloaded.
-    :param javadoc_urls: SciJava Maven, Maven Central, or GitHub URLs where javadoc jars for the main extension jar and for dependencies can be downloaded.
+    :param main_url: The GitHub URL where the main extension jar or zip file can be downloaded.
+    :param required_dependency_urls: SciJava Maven, Maven Central, or GitHub URLs where required dependency jars or zip files can be downloaded.
+    :param optional_dependency_urls: SciJava Maven, Maven Central, or GitHub URLs where optional dependency jars or zip files can be downloaded.
+    :param javadoc_urls: SciJava Maven, Maven Central, or GitHub URLs where javadoc jars or zip files can be downloaded.
     :param qupath_versions: A specification of minimum and maximum compatible QuPath versions.
     """
     name: str
