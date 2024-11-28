@@ -8,7 +8,7 @@
 import sys, os
 sys.path.insert(0, os.path.abspath('../model'))
 
-project = 'qupath-extension-model'
+project = 'extension-index-model'
 copyright = "2024, Pete Bankhead, Alan O'Callaghan, Léo Leplat"
 author = "Pete Bankhead, Alan O'Callaghan, Léo Leplat"
 release = '0.1.0'
