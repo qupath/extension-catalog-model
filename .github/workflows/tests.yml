@@ -1,0 +1,76 @@
+# This workflow will run unit tests when main is updated, on pull requests or when manually activated
+
+name: pytest
+
+on:
+  push:
+    branches:
+      main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install
+        run: pip install .[test]
+
+      - name: Run tests
+        run: |
+          coverage run -m pytest --junitxml=reports/junit/junit.xml --html=reports/junit/report.html
+
+
+      ## everything from here deals with generating and uploading reports and badges to a separate "badges" repo.
+      - name: Create reports and badges
+        if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
+        run: |
+          coverage xml -o reports/coverage/coverage.xml
+          coverage html -d reports/coverage/
+          genbadge coverage -i reports/coverage/coverage.xml
+          genbadge tests -i reports/junit/junit.xml
+
+
+      # - name: Make badge dir
+      #   if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
+      #   run: |
+      #     mkdir -p badges
+      #     mv *badge.svg badges
+
+      # - name: Setup assets dir
+      #   if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
+      #   run: |
+      #     mkdir assets
+      #     mv badges assets/
+      #     mv reports assets/
+
+      # - name: Clone badges repo
+      #   if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
+      #   run: |
+      #       git clone --branch=gh-pages https://${{ secrets.TARGET_REPO_ACCESS_TOKEN }}@github.com/qupath/badges.git badges
+      #       ## cba handling merging or dealing with stale resources
+      #       rm -rf badges/${{ github.event.repository.name }}
+      #       mkdir -p badges/${{ github.event.repository.name }}
+      #       mv assets/* badges/${{github.event.repository.name}}/
+
+      # - name: Deploy badges to gh-pages
+      #   if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
+      #   run: |
+      #     cd badges
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "github-actions[bot]@users.noreply.github.com"
+      #     git add .
+      #     git commit -m "Update badges and reports"
+      #     git push
