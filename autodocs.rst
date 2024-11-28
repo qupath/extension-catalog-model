@@ -1,7 +1,7 @@
-QuPath extension model package
+Extension index model package
 ==============================
 
-.. automodule:: qupath_extension_model.model
+.. automodule:: extension_index_model.model
    :members:
    :undoc-members:
    :show-inheritance:
