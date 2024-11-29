@@ -13,7 +13,7 @@ class VersionRange(BaseModel):
     :param max: The maximum/highest version that this extension is known to be compatible with.
     :param excludes: Any specific versions within the minimum and maximum range that are not compatible.
     """
-    min: str = "v0.6.0"
+    min: str = "v0.1.0"
     max: Optional[str] = None
     excludes: Optional[List[str]] = None
 
