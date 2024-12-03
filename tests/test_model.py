@@ -148,3 +148,39 @@ def test_index_creation():
             )
         ]
     )
+
+
+def test_index_cannot_have_duplicate_names():
+    with pytest.raises(Exception):
+        Index(
+            name="My index",
+            description="My description",
+            extensions = [
+                Extension(
+                    name="my-extension",
+                    description="My extension",
+                    author="Me",
+                    homepage="https://github.com/a/b",
+                    releases = [
+                        Release(
+                            name="v0.1",
+                            main_url="https://github.com/a/b/", 
+                            versions=VersionRange()
+                        )
+                    ]
+                ),
+                Extension(
+                    name="my-extension",
+                    description="My extension",
+                    author="Me",
+                    homepage="https://github.com/a/b",
+                    releases = [
+                        Release(
+                            name="v0.1",
+                            main_url="https://github.com/a/b/", 
+                            versions=VersionRange()
+                        )
+                    ]
+                )
+            ]
+        )
