@@ -36,7 +36,7 @@ class VersionRange(BaseModel):
 
     @classmethod
     def _validate_version(cls, version):
-        assert re.match("^v\d+\.\d+\.\d+(-rc\d+)?$", version), "Versions should be specified in the form v[MAJOR].[MINOR].[PATCH] and may include pre-releases, eg v0.6.0-rc1."
+        assert re.match(r"^v[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$", version), "Versions should be specified in the form v[MAJOR].[MINOR].[PATCH] and may include pre-releases, eg v0.6.0-rc1."
         return version
     
 
@@ -82,18 +82,19 @@ class Extension(BaseModel):
     :param description: A short (one sentence or so) description of what the extension is and what it does.
     :param author: The author or group responsible for the extension.
     :param homepage: A link to the GitHub repository associated with the extension.
-    :param versions: A list of available versions of the extension.
+    :param releases: A list of available releases of the extension.
     """
     name: str
     description: str
     author: str
     homepage: HttpUrl
-    versions: List[Release]
+    releases: List[Release]
     
     @field_validator("homepage")
     @classmethod
     def _validate_homepage(cls, url):
         _validate_primary_url(url)
+    ## todo: should we check that the download links' owner/repo matches the homepage...?
 
 class Index(BaseModel):
     """
@@ -110,13 +111,14 @@ class Index(BaseModel):
     @field_validator("extensions")
     @classmethod
     def _validate_extension_list(cls, extensions):
-        names = [ext["name"] for ext in extensions]
-        assert len(names) > len(set(names)), "Duplicated extension names not allowed in extension index."
+        names = [ext.name for ext in extensions]
+        assert len(names) == len(set(names)), "Duplicated extension names not allowed in extension index."
         return extensions
 
 def _validate_primary_url(primary_url: HttpUrl):
     assert primary_url.host == "github.com", "Homepage and main download links must currently be hosted on github.com."
-    return primary_url#
+    assert re.match("^/[0-9a-zA-Z]+/[0-9a-zA-Z]+/?", primary_url.path) is not None, "Homepage and main download links must currently point to a valid github repo."
+    return primary_url
 
 def _validate_dependency_url(url):
     assert url.host in ["github.com", "maven.scijava.org", "repo1.maven.org"], "Dependency and javadoc download links must currently be hosted on github.com, SciJava Maven, or Maven Central."
