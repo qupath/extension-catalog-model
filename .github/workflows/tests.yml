@@ -43,34 +43,34 @@ jobs:
           genbadge tests -i reports/junit/junit.xml
 
 
-      # - name: Make badge dir
-      #   if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
-      #   run: |
-      #     mkdir -p badges
-      #     mv *badge.svg badges
+      - name: Make badge dir
+        if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
+        run: |
+          mkdir -p badges
+          mv *badge.svg badges
 
-      # - name: Setup assets dir
-      #   if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
-      #   run: |
-      #     mkdir assets
-      #     mv badges assets/
-      #     mv reports assets/
+      - name: Setup assets dir
+        if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
+        run: |
+          mkdir assets
+          mv badges assets/
+          mv reports assets/
 
-      # - name: Clone badges repo
-      #   if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
-      #   run: |
-      #       git clone --branch=gh-pages https://${{ secrets.TARGET_REPO_ACCESS_TOKEN }}@github.com/qupath/badges.git badges
-      #       ## cba handling merging or dealing with stale resources
-      #       rm -rf badges/${{ github.event.repository.name }}
-      #       mkdir -p badges/${{ github.event.repository.name }}
-      #       mv assets/* badges/${{github.event.repository.name}}/
+      - name: Clone badges repo
+        if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
+        run: |
+            git clone --branch=gh-pages https://${{ secrets.BADGES_ACCESS_TOKEN }}@github.com/qupath/badges.git badges
+            ## cba handling merging or dealing with stale resources
+            rm -rf badges/${{ github.event.repository.name }}
+            mkdir -p badges/${{ github.event.repository.name }}
+            mv assets/* badges/${{github.event.repository.name}}/
 
-      # - name: Deploy badges to gh-pages
-      #   if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
-      #   run: |
-      #     cd badges
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "github-actions[bot]@users.noreply.github.com"
-      #     git add .
-      #     git commit -m "Update badges and reports"
-      #     git push
+      - name: Deploy badges to gh-pages
+        if: github.ref_name == 'main' && matrix.os == 'ubuntu-latest'
+        run: |
+          cd badges
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update badges and reports"
+          git push
