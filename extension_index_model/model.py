@@ -7,7 +7,7 @@ import re
 
 class VersionRange(BaseModel):
     """
-    A specification of the minimum and maximum versions that an extension supports. Versions should be specified in the form "v[MAJOR].[MINOR].[PATCH]" corresponding to semantic versions.
+    A specification of the minimum and maximum versions that an extension supports. Versions should be specified in the form "v[MAJOR].[MINOR].[PATCH]" corresponding to semantic versions, although release candidate qualifiers (eg, "-rc1") are also allowed.
 
     :param min: The minimum/lowest version that this extension is known to be compatible with.
     :param max: The maximum/highest version that this extension is known to be compatible with.
@@ -36,19 +36,23 @@ class VersionRange(BaseModel):
 
     @classmethod
     def _validate_version(cls, version):
-        assert re.match(r"^v[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$", version), "Versions should be specified in the form v[MAJOR].[MINOR].[PATCH] and may include pre-releases, eg v0.6.0-rc1."
-        return version
+        return _validate_version(version)
     
 
     @field_validator("excludes")
     def _validate_excludes(cls, excludes):
         return [cls._validate_version(v) for v in excludes]
+    
+def _validate_version(version):
+        assert re.match(r"^v[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$", version), "Versions should be specified in the form v[MAJOR].[MINOR].[PATCH] and may include pre-releases, eg v0.6.0-rc1."
+        return version
+
 
 class Release(BaseModel):
     """
     A description of an extension release hosted on GitHub.
 
-    :param name: The name of the release.
+    :param name: The name of the release. This should be a valid semantic version.
     :param main_url: The GitHub URL where the main extension jar or zip file can be downloaded.
     :param required_dependency_urls: SciJava Maven, Maven Central, or GitHub URLs where required dependency jars or zip files can be downloaded.
     :param optional_dependency_urls: SciJava Maven, Maven Central, or GitHub URLs where optional dependency jars or zip files can be downloaded.
@@ -61,6 +65,11 @@ class Release(BaseModel):
     optional_dependency_urls: Optional[List[HttpUrl]] = None
     javadoc_urls: Optional[List[HttpUrl]] = None
     version_range: VersionRange
+
+    @field_validator("name")
+    @classmethod
+    def _validate_name(cls, name):
+        return _validate_version(name)
 
     @field_validator("main_url")
     @classmethod
