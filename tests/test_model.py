@@ -1,4 +1,4 @@
-from extension_index_model import VersionRange, Release, Extension, Index
+from extension_catalog_model import VersionRange, Release, Extension, Catalog
 import pytest
 
 def test_version_ranges_can_be_created():
@@ -180,9 +180,9 @@ def test_extension_homepage_must_be_gh():
             ]
         )
 
-def test_index_creation():
-    Index(
-        name="My index",
+def test_catalog_creation():
+    Catalog(
+        name="My catalog",
         description="My description",
         extensions = [
             Extension(
@@ -201,10 +201,10 @@ def test_index_creation():
         ]
     )
 
-def test_index_cannot_have_duplicate_names():
+def test_catalog_cannot_have_duplicate_names():
     with pytest.raises(Exception):
-        Index(
-            name="My index",
+        Catalog(
+            name="My catalog",
             description="My description",
             extensions = [
                 Extension(

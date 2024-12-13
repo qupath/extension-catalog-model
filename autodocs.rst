@@ -1,7 +1,7 @@
-Extension index model package
+Extension catalog model package
 ==============================
 
-.. automodule:: extension_index_model.model
+.. automodule:: extension_catalog_model.model
    :members:
    :undoc-members:
    :show-inheritance:
