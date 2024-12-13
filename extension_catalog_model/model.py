@@ -105,13 +105,13 @@ class Extension(BaseModel):
         return _validate_primary_url(url)
     ## todo: should we check that the download links' owner/repo matches the homepage...?
 
-class Index(BaseModel):
+class Catalog(BaseModel):
     """
-    An index describing a collection of extensions.
+    A catalog describing a collection of extensions.
 
-    :param name: The name of the index.
-    :param description: A short (one sentence or so) description of what the index contains and what its purpose is.
-    :param extensions: The collection of extensions that the index describes.
+    :param name: The name of the catalog.
+    :param description: A short (one sentence or so) description of what the catalog contains and what its purpose is.
+    :param extensions: The collection of extensions that the catalog describes.
     """
     name: str
     description: str
@@ -121,7 +121,7 @@ class Index(BaseModel):
     @classmethod
     def _validate_extension_list(cls, extensions):
         names = [ext.name for ext in extensions]
-        assert len(names) == len(set(names)), "Duplicated extension names not allowed in extension index."
+        assert len(names) == len(set(names)), "Duplicated extension names not allowed in extension catalog."
         return extensions
 
 def _validate_primary_url(primary_url: HttpUrl):
