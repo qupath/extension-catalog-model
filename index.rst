@@ -3,19 +3,24 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-extension-catalog-model documentation
-====================================
+Extension catalog model documentation
+=====================================
 
-A `pydantic <https://docs.pydantic.dev/latest/>`_ model for creating, validating, reading and writing extension catalogs for use with an `extension manager <https://github.com/qupath/extension-manager>.
+The extension catalog model is a `pydantic <https://docs.pydantic.dev/latest/>`_ model for creating, validating, reading and writing extension catalogs
+for use with an `extension manager <https://github.com/qupath/extension-manager>`_.
 
+To create a catalog:
 
-API documentation
-=================
+* Create a GitHub repository.
+* Add a `catalog.json` file to the repository.
+* Write your catalog with the JSON format in `catalog.json` by following the specifications of :py:meth:`~extension_catalog_model.model.Catalog`.
 
-This page contains the list of public classes and functions of the extension catalog model.
+An example can be found on the `QuPath catalog repository <https://github.com/qupath/qupath-catalog>`_.
+
+Model specifications
+====================
 
 .. toctree::
-   :maxdepth: 3
-   :caption: Contents:
+   :maxdepth: 2
 
    autodocs
