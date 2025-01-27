@@ -5,3 +5,4 @@
 
 This is a [pydantic](https://docs.pydantic.dev/latest/) package for creating, validating and writing JSON files for the QuPath [extension manager](https://github.com/qupath/extension-manager) project.
 
+Check out the [documentation](https://qupath.github.io/extension-catalog-model/) for guidance on creating a catalog.

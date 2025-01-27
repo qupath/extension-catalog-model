@@ -8,7 +8,7 @@
 import sys, os
 sys.path.insert(0, os.path.abspath('../model'))
 
-project = 'extension-catalog-model'
+project = 'Extension catalog model'
 copyright = "2024, Pete Bankhead, Alan O'Callaghan, Léo Leplat"
 author = "Pete Bankhead, Alan O'Callaghan, Léo Leplat"
 release = '0.1.0'
@@ -17,7 +17,7 @@ release = '0.1.0'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-        "sphinx.ext.autodoc",
+        "sphinxcontrib.autodoc_pydantic"
 ]
 
 templates_path = ['_templates']
@@ -28,5 +28,9 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
-html_static_path = ['_static']
+html_theme = 'sphinx_rtd_theme'
+
+# autodoc pydantic configuration
+autodoc_pydantic_model_show_json = False
+autodoc_pydantic_model_show_validator_summary = False
+autodoc_pydantic_field_list_validators = False
