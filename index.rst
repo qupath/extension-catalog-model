@@ -58,6 +58,14 @@ To create a catalog:
 
 An example can be found on the `QuPath catalog repository <https://github.com/qupath/qupath-catalog>`_.
 
+To read and validate a catalog from a file:
+
+.. code-block:: python
+   
+   from extension_catalog_model.model import Catalog
+   Catalog.parse_file("catalog.json")
+   
+
 Model specifications
 ====================
 
