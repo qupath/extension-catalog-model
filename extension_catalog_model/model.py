@@ -90,7 +90,7 @@ class Release(BaseModel):
     @classmethod
     def _check_urls(cls, urls):
         if urls is None:
-            return True
+            return None
         return [_validate_dependency_url(url) for url in urls]
 
 
