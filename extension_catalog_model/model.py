@@ -17,10 +17,17 @@ class VersionRange(BaseModel):
     max: Optional[str] = None
     excludes: Optional[List[str]] = None
 
-    @field_validator("min", "max")
+    @field_validator("min")
     @classmethod
     def _validate_min(cls, min):
         return cls._validate_version(min)
+    
+    @field_validator("max")
+    @classmethod
+    def _validate_min(cls, max):
+        if max is None:
+            return max
+        return cls._validate_version(max)
 
     @model_validator(mode="after")
     def _validate_version_range(self):
@@ -41,6 +48,8 @@ class VersionRange(BaseModel):
 
     @field_validator("excludes")
     def _validate_excludes(cls, excludes):
+        if excludes is None:
+            return excludes
         return [cls._validate_version(v) for v in excludes]
     
 def _validate_version(version):
@@ -80,6 +89,8 @@ class Release(BaseModel):
     "optional_dependency_urls", "javadoc_urls")
     @classmethod
     def _check_urls(cls, urls):
+        if urls is None:
+            return None
         return [_validate_dependency_url(url) for url in urls]
 
 
