@@ -9,52 +9,93 @@ Extension catalog model documentation
 The extension catalog model is a `pydantic <https://docs.pydantic.dev/latest/>`_ model for creating, validating, reading and writing extension catalogs
 for use with an `extension manager <https://github.com/qupath/extension-manager>`_.
 
-To create a catalog:
+To create a catalog, you can either use Python or QuPath:
 
-* Install this package:
+* With Python:
 
-.. code-block:: bash
+   * Install this package:
 
-   pip install git+https://github.com/qupath/extension-catalog-model.git
+   .. code-block:: bash
 
-* Create and run a Python script that creates a `catalog.json` file with the JSON representation of a :py:meth:`~extension_catalog_model.model.Catalog`. A detailed description of each field of a catalog can be found on the specifications below.
+      pip install git+https://github.com/qupath/extension-catalog-model.git
 
-.. code-block:: python
+   * Create and run a Python script that creates a `catalog.json` file with the JSON representation of a :py:meth:`~extension_catalog_model.model.Catalog`. A detailed description of each field of a catalog can be found on the specifications below.
 
-   # create_catalog.py
+   .. code-block:: python
 
-   from extension_catalog_model.model import *
+      # create_catalog.py
 
-   version_range = VersionRange(min="v0.5.1")
-   release = Release(
-      name="v0.1.0-rc5",
-      main_url="https://github.com/qupath/qupath-extension-omero/releases/download/v0.1.0-rc5/qupath-extension-omero-0.1.0-rc5.jar",
-      optional_dependency_urls=["https://github.com/ome/openmicroscopy/releases/download/v5.6.14/OMERO.java-5.6.14-ice36.zip"],
-      version_range=version_range
-   )
-   extension = Extension(
-      name="QuPath OMERO extension",
-      description="QuPath extension to work with images through OMERO's APIs",
-      author="QuPath",
-      homepage="https://github.com/qupath/qupath-extension-omero",
-      releases=[release]
-   )
-   catalog = Catalog(
-      name="QuPath catalog",
-      description="Extensions maintained by the QuPath team",
-      extensions=[extension]
-   )
+      from extension_catalog_model.model import *
 
-   with open("catalog.json", "w") as file:
-      file.write(catalog.model_dump_json(indent=2))
-      print(file.name + " written")
+      version_range = VersionRange(min="v0.5.1")
+      release = Release(
+         name="v0.1.0-rc5",
+         main_url="https://github.com/qupath/qupath-extension-omero/releases/download/v0.1.0-rc5/qupath-extension-omero-0.1.0-rc5.jar",
+         optional_dependency_urls=["https://github.com/ome/openmicroscopy/releases/download/v5.6.14/OMERO.java-5.6.14-ice36.zip"],
+         version_range=version_range
+      )
+      extension = Extension(
+         name="QuPath OMERO extension",
+         description="QuPath extension to work with images through OMERO's APIs",
+         author="QuPath",
+         homepage="https://github.com/qupath/qupath-extension-omero",
+         releases=[release]
+      )
+      catalog = Catalog(
+         name="QuPath catalog",
+         description="Extensions maintained by the QuPath team",
+         extensions=[extension]
+      )
 
-.. code-block:: bash
+      with open("catalog.json", "w") as file:
+         file.write(catalog.model_dump_json(indent=2))
+         print(file.name + " written")
 
-   python3 create_catalog.py
+   .. code-block:: bash
 
-* Create a GitHub repository.
-* Add the previously created `catalog.json` file to the repository.
+      python3 create_catalog.py
+
+* With QuPath v0.6 or later:
+
+   * Open the script editor in QuPath (Automate -> Script editor).
+   * Create and run a script that creates a `catalog.json` file with the JSON representation of a :py:meth:`~extension_catalog_model.model.Catalog`. A detailed description of each field of a catalog can be found on the specifications below.
+
+   .. code-block:: java
+
+      import qupath.ext.extensionmanager.core.catalog.*
+      import com.google.gson.GsonBuilder
+      import java.nio.file.Paths
+
+
+      var versionRange = new VersionRange("v0.5.1", null, null)
+      var release = new Release(
+         "v0.1.0-rc5",
+         new URI("https://github.com/qupath/qupath-extension-omero/releases/download/v0.1.0-rc5/qupath-extension-omero-0.1.0-rc5.jar"),
+         null,
+         List.of(new URI("https://github.com/ome/openmicroscopy/releases/download/v5.6.14/OMERO.java-5.6.14-ice36.zip")),
+         null,
+         versionRange
+      )
+      var extension = new Extension(
+         "QuPath OMERO extension",
+         "QuPath extension to work with images through OMERO's APIs",
+         "QuPath",
+         new URI("https://github.com/qupath/qupath-extension-omero"),
+         List.of(release)
+      )
+      var catalog = new Catalog(
+         "QuPath catalog",
+         "Extensions maintained by the QuPath team",
+         List.of(extension)
+      )
+
+      try (FileWriter fileWriter = new FileWriter("catalog.json")) {
+         new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(catalog, fileWriter);
+      }
+      println "Catalog saved to " + Paths.get("catalog.json").toAbsolutePath()
+
+
+Once the `catalog.json` file is created, create a GitHub repository and add `catalog.json` to the repository.
 
 An example can be found on the `QuPath catalog repository <https://github.com/qupath/qupath-catalog>`_.
 
