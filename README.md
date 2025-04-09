@@ -41,4 +41,4 @@ from extension_catalog_model.model import Catalog
 Catalog.parse_file("catalog.json")
 ```
 
-An example can be found on the [QuPath catalog repositor](https://github.com/qupath/qupath-catalog>).
+An example can be found on the [QuPath catalog repository](https://github.com/qupath/qupath-catalog).
