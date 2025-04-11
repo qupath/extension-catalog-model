@@ -109,7 +109,7 @@ class Extension(BaseModel):
     description: str
     author: str
     homepage: HttpUrl
-    starred: bool = False
+    starred: Optional[bool] = False
     releases: List[Release]
     
     @field_validator("homepage")
