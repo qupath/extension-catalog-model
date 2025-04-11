@@ -3,3 +3,4 @@ env/
 *.egg-info
 _build
 **/__pycache__
+.DS_Store
