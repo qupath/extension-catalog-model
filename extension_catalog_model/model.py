@@ -102,12 +102,14 @@ class Extension(BaseModel):
     :param description: A short (one sentence or so) description of what the extension is and what it does.
     :param author: The author or group responsible for the extension.
     :param homepage: A link to the GitHub repository associated with the extension.
+    :param starred: Whether the extension is generally useful or recommended for most users.
     :param releases: A list of available releases of the extension.
     """
     name: str
     description: str
     author: str
     homepage: HttpUrl
+    starred: bool = False
     releases: List[Release]
     
     @field_validator("homepage")
