@@ -53,7 +53,7 @@ class VersionRange(BaseModel):
         return [cls._validate_version(v) for v in excludes]
     
 def _validate_version(version):
-        assert re.match(r"^v[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$", version), "Versions should be specified in the form v[MAJOR].[MINOR].[PATCH] and may include pre-releases, eg v0.6.0-rc1."
+        assert re.match(r"^v[0-9]+(\.[0-9]+)?(\.[0-9]+)?(-rc[0-9]+)?$", version), "Versions should be specified in the form v[MAJOR].[MINOR].[PATCH] and may include pre-releases, eg v0.6.0-rc1."
         return version
 
 
