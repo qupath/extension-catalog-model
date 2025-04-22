@@ -9,9 +9,9 @@ class VersionRange(BaseModel):
     """
     A specification of the minimum and maximum versions that an extension supports. Versions should be specified in the form "v[MAJOR].[MINOR].[PATCH]" corresponding to semantic versions, although trailing release candidate qualifiers (eg, "-rc1") are also allowed.
 
-    :param min: The minimum/lowest version that this extension is known to be compatible with.
-    :param max: The maximum/highest version that this extension is known to be compatible with.
-    :param excludes: Any specific versions within the minimum and maximum range that are not compatible.
+    :param min: The minimum/lowest version (inclusive) that this extension is known to be compatible with.
+    :param max: The maximum/highest version (inclusive) that this extension is known to be compatible with.
+    :param excludes: Any specific versions within the minimum and maximum range (inclusive) that are not compatible.
     """
     min: str = "v0.1.0"
     max: Optional[str] = None
