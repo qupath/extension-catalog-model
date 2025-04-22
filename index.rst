@@ -81,6 +81,7 @@ To create a catalog, you can either use Python or QuPath:
          "QuPath extension to work with images through OMERO's APIs",
          "QuPath",
          new URI("https://github.com/qupath/qupath-extension-omero"),
+         false,
          List.of(release)
       )
       var catalog = new Catalog(
