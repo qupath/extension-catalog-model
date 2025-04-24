@@ -64,6 +64,7 @@ To create a catalog, you can either use Python or QuPath:
 
       import qupath.ext.extensionmanager.core.catalog.*
       import com.google.gson.GsonBuilder
+      import com.google.gson.FieldNamingPolicy
       import java.nio.file.Paths
 
 
@@ -81,6 +82,7 @@ To create a catalog, you can either use Python or QuPath:
          "QuPath extension to work with images through OMERO's APIs",
          "QuPath",
          new URI("https://github.com/qupath/qupath-extension-omero"),
+         false,
          List.of(release)
       )
       var catalog = new Catalog(
@@ -90,7 +92,12 @@ To create a catalog, you can either use Python or QuPath:
       )
 
       try (FileWriter fileWriter = new FileWriter("catalog.json")) {
-         new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(catalog, fileWriter);
+         new GsonBuilder()
+            .setPrettyPrinting()
+            .disableHtmlEscaping()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .create()
+            .toJson(catalog, fileWriter);
       }
       println "Catalog saved to " + Paths.get("catalog.json").toAbsolutePath()
 
