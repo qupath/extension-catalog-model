@@ -4,6 +4,7 @@ from packaging.version import Version
 
 from typing import List, Optional
 import re
+import requests
 
 class VersionRange(BaseModel):
     """
@@ -141,9 +142,14 @@ def _validate_primary_url(primary_url: HttpUrl):
     assert primary_url.scheme == "https", "URLs must use https"
     assert primary_url.host == "github.com", "Homepage and main download links must currently be hosted on github.com."
     assert re.match("^/[0-9a-zA-Z]+/[0-9a-zA-Z]+/?", primary_url.path) is not None, "Homepage and main download links must currently point to a valid github repo."
+    retcode = requests.get(primary_url).status_code
+    assert retcode == 200, f"URL request returns {retcode}"    
     return primary_url
 
-def _validate_dependency_url(url):
+def _validate_dependency_url(url: HttpUrl):
     assert url.scheme == "https", "URLs must use https"
     assert url.host in ["github.com", "maven.scijava.org", "repo1.maven.org"], "Dependency and javadoc download links must currently be hosted on github.com, SciJava Maven, or Maven Central."
+    retcode = requests.get(url).status_code
+    assert retcode == 200, f"URL request returns {retcode}"
     return url
+
